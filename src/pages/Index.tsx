@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { WeatherData, AppMode, ChatMessage } from '@/types/weather';
+import { fetchWeatherData, fetchWeatherByLocation, getUserLocation } from '@/utils/weatherApi';
 import { getMockWeatherData } from '@/utils/mockWeather';
 import { generateWeatherAdvice } from '@/utils/weatherAdvice';
 import { Header } from '@/components/Header';
@@ -7,33 +8,80 @@ import { LocationSearch } from '@/components/LocationSearch';
 import { WeatherCard } from '@/components/WeatherCard';
 import { ModeToggle } from '@/components/ModeToggle';
 import { ChatAssistant } from '@/components/ChatAssistant';
+import { useToast } from '@/hooks/use-toast';
 
 /**
  * Main Weather App Component
- * Displays weather information and provides smart advice based on selected mode
+ * Fetches real weather data from OpenWeatherMap API via secure backend
  */
 const Index = () => {
-  // State management using React hooks
+  const { toast } = useToast();
+  
+  // State management
   const [location, setLocation] = useState<string>('Mumbai, India');
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [mode, setMode] = useState<AppMode>('general');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   /**
-   * Fetch weather data for the current location
-   * Uses mock data - can be replaced with real API
+   * Fetch weather data from the API
    */
-  const fetchWeather = useCallback(() => {
+  const fetchWeather = useCallback(async (searchLocation?: string) => {
     setIsLoading(true);
+    setError(null);
     
-    // Simulate API delay for realistic feel
-    setTimeout(() => {
-      const data = getMockWeatherData(location);
+    try {
+      const data = await fetchWeatherData(searchLocation || location);
       setWeather(data);
+      setLocation(data.location); // Update with formatted location from API
+    } catch (err: any) {
+      console.error('Weather fetch error:', err);
+      setError(err.message);
+      
+      // Show error toast and fall back to mock data
+      toast({
+        title: "Couldn't fetch live weather",
+        description: "Showing sample data. Check your API key or try another city.",
+        variant: "destructive",
+      });
+      
+      // Use mock data as fallback
+      const mockData = getMockWeatherData(searchLocation || location);
+      setWeather(mockData);
+    } finally {
       setIsLoading(false);
-    }, 800);
-  }, [location]);
+    }
+  }, [location, toast]);
+
+  /**
+   * Try to get user's location on first load
+   */
+  useEffect(() => {
+    const initializeWeather = async () => {
+      const coords = await getUserLocation();
+      
+      if (coords) {
+        try {
+          setIsLoading(true);
+          const data = await fetchWeatherByLocation(coords.lat, coords.lon);
+          setWeather(data);
+          setLocation(data.location);
+        } catch (err) {
+          // Fall back to default city
+          fetchWeather();
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        // No geolocation, use default city
+        fetchWeather();
+      }
+    };
+
+    initializeWeather();
+  }, []);
 
   /**
    * Generate advice messages when weather or mode changes
@@ -46,21 +94,14 @@ const Index = () => {
   }, [weather, mode]);
 
   /**
-   * Fetch weather on initial load and location change
-   */
-  useEffect(() => {
-    fetchWeather();
-  }, [fetchWeather]);
-
-  /**
-   * Handle location change from search
+   * Handle location search
    */
   const handleLocationChange = (newLocation: string) => {
-    setLocation(newLocation);
+    fetchWeather(newLocation);
   };
 
   /**
-   * Handle mode change from toggle
+   * Handle mode change
    */
   const handleModeChange = (newMode: AppMode) => {
     setMode(newMode);
@@ -91,12 +132,22 @@ const Index = () => {
           <LocationSearch
             currentLocation={location}
             onLocationChange={handleLocationChange}
+            isLoading={isLoading}
           />
         </div>
 
         {/* Weather Display */}
         {weather && !isLoading ? (
           <div className="space-y-6">
+            {/* Live data indicator */}
+            <div className="flex justify-center">
+              <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium
+                ${error ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'}`}>
+                <span className={`w-2 h-2 rounded-full ${error ? 'bg-destructive' : 'bg-primary animate-pulse'}`} />
+                {error ? 'Sample Data' : 'Live Weather Data'}
+              </span>
+            </div>
+
             {/* Weather Card */}
             <WeatherCard weather={weather} />
 
