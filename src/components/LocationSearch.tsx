@@ -1,82 +1,62 @@
 import { useState } from 'react';
-import { Search, MapPin } from 'lucide-react';
-import { indianCities } from '@/utils/mockWeather';
+import { Search, MapPin, Loader2 } from 'lucide-react';
 
 interface LocationSearchProps {
   currentLocation: string;
   onLocationChange: (location: string) => void;
+  isLoading?: boolean;
 }
 
 /**
- * Location search component with autocomplete suggestions
+ * Location search component - searches any city worldwide
  */
-export function LocationSearch({ currentLocation, onLocationChange }: LocationSearchProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function LocationSearch({ currentLocation, onLocationChange, isLoading }: LocationSearchProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Filter cities based on search term
-  const filteredCities = indianCities.filter((city) =>
-    city.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleSelect = (city: string) => {
-    onLocationChange(city);
-    setSearchTerm('');
-    setIsOpen(false);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      onLocationChange(searchTerm.trim());
+      setSearchTerm('');
+    }
   };
 
   return (
-    <div className="relative w-full max-w-md mx-auto">
-      {/* Search Input */}
+    <form onSubmit={handleSubmit} className="relative w-full max-w-md mx-auto">
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+        {isLoading ? (
+          <Loader2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary animate-spin" />
+        ) : (
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+        )}
         <input
           type="text"
-          placeholder="Search city..."
+          placeholder="Search any city..."
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setIsOpen(true);
-          }}
-          onFocus={() => setIsOpen(true)}
-          className="w-full pl-12 pr-4 py-3 rounded-xl bg-card border border-border
+          onChange={(e) => setSearchTerm(e.target.value)}
+          disabled={isLoading}
+          className="w-full pl-12 pr-24 py-3 rounded-xl bg-card border border-border
                      focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary
                      text-foreground placeholder:text-muted-foreground
-                     transition-all duration-200"
+                     transition-all duration-200 disabled:opacity-50"
         />
+        <button
+          type="submit"
+          disabled={!searchTerm.trim() || isLoading}
+          className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 
+                     bg-primary text-primary-foreground rounded-lg text-sm font-medium
+                     hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed
+                     transition-colors duration-200"
+        >
+          Search
+        </button>
       </div>
-
-      {/* Suggestions Dropdown */}
-      {isOpen && searchTerm && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border 
-                        rounded-xl shadow-card overflow-hidden z-50 max-h-60 overflow-y-auto">
-          {filteredCities.length > 0 ? (
-            filteredCities.map((city) => (
-              <button
-                key={city}
-                onClick={() => handleSelect(city)}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50
-                           text-left transition-colors duration-150"
-              >
-                <MapPin className="w-4 h-4 text-muted-foreground" />
-                <span className="text-foreground">{city}</span>
-              </button>
-            ))
-          ) : (
-            <div className="px-4 py-3 text-muted-foreground text-center">
-              No cities found
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Click outside to close */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-    </div>
+      
+      {/* Current location indicator */}
+      <div className="flex items-center justify-center gap-2 mt-3 text-sm text-muted-foreground">
+        <MapPin className="w-4 h-4" />
+        <span>Currently showing: {currentLocation}</span>
+      </div>
+    </form>
   );
 }
