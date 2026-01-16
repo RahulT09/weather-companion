@@ -1,0 +1,23 @@
+// Weather data types for the application
+
+export interface WeatherData {
+  location: string;
+  temperature: number;
+  condition: WeatherCondition;
+  humidity: number;
+  windSpeed: number;
+  rainProbability: number;
+  feelsLike: number;
+  description: string;
+}
+
+export type WeatherCondition = 'sunny' | 'cloudy' | 'rainy' | 'stormy' | 'windy' | 'foggy' | 'snowy';
+
+export type AppMode = 'general' | 'farmer' | 'activity';
+
+export interface ChatMessage {
+  id: string;
+  content: string;
+  type: 'greeting' | 'advice' | 'warning' | 'tip';
+  timestamp: Date;
+}
