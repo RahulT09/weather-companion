@@ -148,8 +148,8 @@ const Index = () => {
             {/* Live data indicator */}
             <div className="flex justify-center">
               <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium
-                ${error ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'}`}>
-                <span className={`w-2 h-2 rounded-full ${error ? 'bg-destructive' : 'bg-primary animate-pulse'}`} />
+                ${error ? 'bg-red-500/20 text-red-200' : 'bg-white/20 backdrop-blur-sm'}`}>
+                <span className={`w-2 h-2 rounded-full ${error ? 'bg-red-400' : 'bg-white animate-pulse'}`} />
                 {error ? 'Sample Data' : 'Live Weather Data'}
               </span>
             </div>
@@ -179,9 +179,9 @@ const Index = () => {
         )}
 
         {/* Footer */}
-        <footer className="mt-10 text-center text-sm text-muted-foreground">
+        <footer className="mt-10 text-center text-sm opacity-80">
           <p>WeatherBuddy - Your Smart Weather Companion</p>
-          <p className="mt-1 text-xs">
+          <p className="mt-1 text-xs opacity-70">
             Made with ❤️ for farmers and everyone
           </p>
         </footer>
