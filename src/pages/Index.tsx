@@ -3,7 +3,7 @@ import { WeatherData, AppMode, ChatMessage } from '@/types/weather';
 import { fetchWeatherData, fetchWeatherByLocation, getUserLocation } from '@/utils/weatherApi';
 import { getMockWeatherData } from '@/utils/mockWeather';
 import { generateWeatherAdvice } from '@/utils/weatherAdvice';
-import { getWeatherBackgroundClass } from '@/utils/weatherBackground';
+import { getWeatherTheme } from '@/utils/weatherBackground';
 import { Header } from '@/components/Header';
 import { LocationSearch } from '@/components/LocationSearch';
 import { WeatherCard } from '@/components/WeatherCard';
@@ -115,13 +115,13 @@ const Index = () => {
     fetchWeather();
   };
 
-  // Get dynamic background class based on weather condition
-  const backgroundClass = weather 
-    ? getWeatherBackgroundClass(weather.condition) 
-    : 'bg-background';
+  // Get dynamic theme based on weather condition
+  const weatherTheme = weather 
+    ? getWeatherTheme(weather.condition) 
+    : { background: 'bg-background', text: '' };
 
   return (
-    <div className={`min-h-screen weather-bg-transition ${backgroundClass}`}>
+    <div className={`min-h-screen weather-bg-transition ${weatherTheme.background} ${weatherTheme.text}`}>
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl" />

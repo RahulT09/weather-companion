@@ -217,5 +217,18 @@
 
 /* Smooth transition for background changes */
 .weather-bg-transition {
-  transition: background 0.8s ease-in-out;
+  transition: background 0.8s ease-in-out, color 0.5s ease-in-out;
+}
+
+/* Weather-based text colors */
+.weather-text-light {
+  --foreground: 0 0% 100%;
+  --muted-foreground: 0 0% 85%;
+  color: hsl(0 0% 100%);
+}
+
+.weather-text-dark {
+  --foreground: 220 20% 20%;
+  --muted-foreground: 220 10% 35%;
+  color: hsl(220 20% 20%);
 }
