@@ -9,6 +9,7 @@ import { LocationSearch } from '@/components/LocationSearch';
 import { WeatherCard } from '@/components/WeatherCard';
 import { ModeToggle } from '@/components/ModeToggle';
 import { ChatAssistant } from '@/components/ChatAssistant';
+import { WeatherParticles } from '@/components/WeatherParticles';
 import { useToast } from '@/hooks/use-toast';
 
 /**
@@ -122,6 +123,9 @@ const Index = () => {
 
   return (
     <div className={`min-h-screen weather-bg-transition ${weatherTheme.background} ${weatherTheme.text}`}>
+      {/* Weather particles overlay */}
+      {weather && <WeatherParticles condition={weather.condition} />}
+      
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
