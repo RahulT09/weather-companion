@@ -1,18 +1,30 @@
 import { WeatherCondition } from '@/types/weather';
 
+interface WeatherTheme {
+  background: string;
+  text: string;
+}
+
 /**
- * Maps weather conditions to CSS background classes
+ * Maps weather conditions to CSS background and text classes
  */
-export const getWeatherBackgroundClass = (condition: WeatherCondition): string => {
-  const backgroundMap: Record<WeatherCondition, string> = {
-    sunny: 'weather-bg-sunny',
-    cloudy: 'weather-bg-cloudy',
-    rainy: 'weather-bg-rainy',
-    stormy: 'weather-bg-stormy',
-    snowy: 'weather-bg-snowy',
-    windy: 'weather-bg-cloudy', // Similar to cloudy
-    foggy: 'weather-bg-cloudy', // Similar to cloudy
+export const getWeatherTheme = (condition: WeatherCondition): WeatherTheme => {
+  const themeMap: Record<WeatherCondition, WeatherTheme> = {
+    sunny: { background: 'weather-bg-sunny', text: 'weather-text-dark' },
+    cloudy: { background: 'weather-bg-cloudy', text: 'weather-text-light' },
+    rainy: { background: 'weather-bg-rainy', text: 'weather-text-light' },
+    stormy: { background: 'weather-bg-stormy', text: 'weather-text-light' },
+    snowy: { background: 'weather-bg-snowy', text: 'weather-text-dark' },
+    windy: { background: 'weather-bg-cloudy', text: 'weather-text-light' },
+    foggy: { background: 'weather-bg-cloudy', text: 'weather-text-light' },
   };
 
-  return backgroundMap[condition] || 'weather-bg-sunny';
+  return themeMap[condition] || { background: 'weather-bg-sunny', text: 'weather-text-dark' };
+};
+
+/**
+ * @deprecated Use getWeatherTheme instead
+ */
+export const getWeatherBackgroundClass = (condition: WeatherCondition): string => {
+  return getWeatherTheme(condition).background;
 };
