@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { MapPin } from 'lucide-react';
 import { WeatherData, AppMode, ChatMessage } from '@/types/weather';
 import { fetchWeatherData, fetchWeatherByLocation, getUserLocation } from '@/utils/weatherApi';
 import { getMockWeatherData } from '@/utils/mockWeather';
@@ -10,8 +11,8 @@ import { WeatherCard } from '@/components/WeatherCard';
 import { ModeToggle } from '@/components/ModeToggle';
 import { ChatAssistant } from '@/components/ChatAssistant';
 import { WeatherParticles } from '@/components/WeatherParticles';
+import { LocalGuideChat } from '@/components/LocalGuideChat';
 import { useToast } from '@/hooks/use-toast';
-
 /**
  * Main Weather App Component
  * Fetches real weather data from OpenWeatherMap API via secure backend
@@ -26,6 +27,7 @@ const Index = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
 
   /**
    * Fetch weather data from the API
@@ -158,6 +160,19 @@ const Index = () => {
               </span>
             </div>
 
+            {/* Local Guide Button */}
+            <div className="flex justify-center">
+              <button
+                onClick={() => setIsGuideOpen(true)}
+                className="flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm 
+                           hover:bg-white/30 rounded-xl font-medium transition-all duration-200
+                           border border-white/20 shadow-lg hover:shadow-xl hover:scale-105"
+              >
+                <MapPin className="w-5 h-5" />
+                <span>Talk to Local Guide</span>
+              </button>
+            </div>
+
             {/* Weather Card */}
             <WeatherCard weather={weather} />
 
@@ -184,12 +199,21 @@ const Index = () => {
 
         {/* Footer */}
         <footer className="mt-10 text-center text-sm opacity-80">
-          <p>WeatherBuddy - Your Smart Weather Companion</p>
+          <p>WeatherBuddy - Your Smart Travel Companion</p>
           <p className="mt-1 text-xs opacity-70">
-            Made with ❤️ for farmers and everyone
+            Made with ❤️ for travelers and locals
           </p>
         </footer>
       </div>
+
+      {/* Local Guide Chat Modal */}
+      {weather && (
+        <LocalGuideChat
+          weather={weather}
+          isOpen={isGuideOpen}
+          onClose={() => setIsGuideOpen(false)}
+        />
+      )}
     </div>
   );
 };
