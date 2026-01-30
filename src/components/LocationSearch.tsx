@@ -37,7 +37,7 @@ export function LocationSearch({ currentLocation, onLocationChange, isLoading }:
           disabled={isLoading}
           className="w-full pl-12 pr-24 py-3 rounded-xl bg-card border border-border
                      focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary
-                     text-foreground placeholder:text-muted-foreground
+                     text-card-foreground placeholder:text-muted-foreground
                      transition-all duration-200 disabled:opacity-50"
         />
         <button
