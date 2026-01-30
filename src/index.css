@@ -52,7 +52,9 @@
 
     /* Mode colors */
     --farmer-mode: 142 50% 45%;
+    --farmer-mode-foreground: 0 0% 100%;
     --activity-mode: 200 75% 50%;
+    --activity-mode-foreground: 0 0% 100%;
 
     /* Chat bubble */
     --chat-bg: 142 40% 95%;

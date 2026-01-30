@@ -174,8 +174,8 @@ function ChatTab({
           placeholder="Your name"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
-          className="w-full px-4 py-2 rounded-lg bg-secondary/50 border border-border
-                     focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+          className="w-full px-4 py-2 rounded-lg bg-muted border border-border text-foreground
+                     placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
         />
         <div className="flex gap-2">
           <input
@@ -183,8 +183,8 @@ function ChatTab({
             placeholder="Share your tip or experience..."
             value={newTip}
             onChange={(e) => setNewTip(e.target.value)}
-            className="flex-1 px-4 py-2 rounded-lg bg-secondary/50 border border-border
-                       focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+            className="flex-1 px-4 py-2 rounded-lg bg-muted border border-border text-foreground
+                       placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
           />
           <button
             type="submit"

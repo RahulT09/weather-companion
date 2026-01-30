@@ -53,8 +53,14 @@ export default {
         cloudy: "hsl(var(--cloudy))",
         windy: "hsl(var(--windy))",
         // Mode colors
-        farmer: "hsl(var(--farmer-mode))",
-        activity: "hsl(var(--activity-mode))",
+        farmer: {
+          DEFAULT: "hsl(var(--farmer-mode))",
+          foreground: "hsl(var(--farmer-mode-foreground))",
+        },
+        activity: {
+          DEFAULT: "hsl(var(--activity-mode))",
+          foreground: "hsl(var(--activity-mode-foreground))",
+        },
         // Chat
         chat: {
           DEFAULT: "hsl(var(--chat-bg))",

@@ -43,9 +43,9 @@ export function ModeToggle({ currentMode, onModeChange }: ModeToggleProps) {
             ${
               currentMode === mode.id
                 ? mode.id === 'farmer'
-                  ? 'bg-farmer text-primary-foreground shadow-md scale-105'
+                  ? 'bg-farmer text-farmer-foreground shadow-md scale-105'
                   : mode.id === 'activity'
-                  ? 'bg-activity text-secondary-foreground shadow-md scale-105'
+                  ? 'bg-activity text-activity-foreground shadow-md scale-105'
                   : 'bg-primary text-primary-foreground shadow-md scale-105'
                 : 'bg-transparent text-muted-foreground hover:bg-card hover:text-foreground'
             }
