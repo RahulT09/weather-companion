@@ -18,6 +18,25 @@ export type AppMode = 'general' | 'farmer' | 'activity';
 export interface ChatMessage {
   id: string;
   content: string;
-  type: 'greeting' | 'advice' | 'warning' | 'tip';
+  type: 'greeting' | 'advice' | 'warning' | 'tip' | 'user' | 'guide';
   timestamp: Date;
+  author?: string;
+}
+
+// Travel assistant types
+export interface LocalTip {
+  id: string;
+  content: string;
+  author: string;
+  timestamp: Date;
+  category: 'travel' | 'food' | 'safety' | 'weather' | 'general';
+  likes: number;
+}
+
+export interface TravelAdvice {
+  weather: string[];
+  travel: string[];
+  safety: string[];
+  localTips: string[];
+  bestTimes: string[];
 }
