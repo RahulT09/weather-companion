@@ -362,6 +362,109 @@
   }
 }
 
+/* ===== NIGHT SKY EFFECTS ===== */
+
+/* Moon */
+.moon-container {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  width: 120px;
+  height: 120px;
+}
+
+.moon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
+  filter: drop-shadow(0 0 20px hsl(45 80% 90% / 0.8));
+  animation: moon-float 6s ease-in-out infinite;
+}
+
+.moon-glow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle, hsl(45 60% 85% / 0.3) 0%, hsl(230 50% 70% / 0.1) 50%, transparent 70%);
+  border-radius: 50%;
+  animation: moon-glow-pulse 4s ease-in-out infinite;
+}
+
+@keyframes moon-float {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-5px);
+  }
+}
+
+@keyframes moon-glow-pulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Stars */
+.stars-container {
+  position: absolute;
+  inset: 0;
+}
+
+.star {
+  position: absolute;
+  color: hsl(45 100% 95%);
+  animation: star-twinkle 2s ease-in-out infinite;
+  text-shadow: 0 0 10px hsl(45 100% 80% / 0.8);
+}
+
+@keyframes star-twinkle {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Shooting Stars */
+.shooting-star {
+  position: absolute;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(to right, hsl(0 0% 100%), hsl(45 100% 90% / 0.8), transparent);
+  border-radius: 2px;
+  transform: rotate(-45deg);
+  animation: shooting-star-fly linear infinite;
+  opacity: 0;
+}
+
+@keyframes shooting-star-fly {
+  0% {
+    transform: rotate(-45deg) translateX(0);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  20% {
+    transform: rotate(-45deg) translateX(300px);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(-45deg) translateX(300px);
+    opacity: 0;
+  }
+}
+
 /* ===== DAY TIME BACKGROUNDS ===== */
 .weather-bg-sunny {
   background: linear-gradient(180deg, hsl(200 85% 60%) 0%, hsl(45 95% 70%) 100%);
