@@ -1,17 +1,18 @@
 import { useMemo } from 'react';
-import { WeatherCondition } from '@/types/weather';
-import { isNightTime } from '@/utils/weatherBackground';
+import { WeatherCondition, WeatherData } from '@/types/weather';
+import { isNightTimeAtLocation } from '@/utils/weatherBackground';
 
 interface WeatherParticlesProps {
   condition: WeatherCondition;
+  weather?: WeatherData | null;
 }
 
 /**
  * Animated weather particles overlay based on current weather condition
- * Includes night-time stars and moon effects
+ * Includes night-time stars and moon effects based on location's time
  */
-export function WeatherParticles({ condition }: WeatherParticlesProps) {
-  const isNight = isNightTime();
+export function WeatherParticles({ condition, weather }: WeatherParticlesProps) {
+  const isNight = isNightTimeAtLocation(weather);
   
   // Generate random particles based on condition
   const particles = useMemo(() => {

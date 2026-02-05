@@ -126,7 +126,7 @@ const Index = () => {
   return (
     <div className={`min-h-screen weather-bg-transition ${weatherTheme.background} ${weatherTheme.text}`}>
       {/* Weather particles overlay */}
-      {weather && <WeatherParticles condition={weather.condition} />}
+      {weather && <WeatherParticles condition={weather.condition} weather={weather} />}
       
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
