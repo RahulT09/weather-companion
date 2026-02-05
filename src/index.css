@@ -508,20 +508,60 @@
   transition: background 0.8s ease-in-out, color 0.5s ease-in-out;
 }
 
-/* Weather-based text colors for light backgrounds (sunny, snowy) */
+/* Weather-based text colors for light backgrounds (sunny day, snowy day) */
 .weather-text-dark {
   --foreground: 220 20% 20%;
   --muted-foreground: 220 10% 35%;
+  color: hsl(220 20% 20%);
 }
 
-/* Weather-based text colors for dark backgrounds (rainy, stormy, cloudy) */
+.weather-text-dark h1,
+.weather-text-dark h2,
+.weather-text-dark p,
+.weather-text-dark span,
+.weather-text-dark button {
+  color: inherit;
+}
+
+/* Weather-based text colors for dark backgrounds (rainy, stormy, cloudy, night) */
 .weather-text-light {
   --foreground: 0 0% 100%;
-  --muted-foreground: 0 0% 80%;
+  --muted-foreground: 0 0% 85%;
+  color: hsl(0 0% 100%);
+}
+
+.weather-text-light h1,
+.weather-text-light h2,
+.weather-text-light p,
+.weather-text-light span,
+.weather-text-light button {
+  color: inherit;
+}
+
+.weather-text-light .opacity-80 {
+  color: hsl(0 0% 90%);
+}
+
+.weather-text-light .opacity-70 {
+  color: hsl(0 0% 85%);
 }
 
 /* Ensure cards always have proper colors regardless of weather theme */
 .glass-card {
   --foreground: 220 20% 20%;
   --muted-foreground: 220 10% 45%;
+  color: hsl(220 20% 20%);
+}
+
+.glass-card h1,
+.glass-card h2,
+.glass-card h3,
+.glass-card p,
+.glass-card span,
+.glass-card div {
+  color: inherit;
+}
+
+.glass-card .text-muted-foreground {
+  color: hsl(220 10% 45%);
 }
