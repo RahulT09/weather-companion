@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { WeatherCondition } from '@/types/weather';
+import { isNightTime } from '@/utils/weatherBackground';
 
 interface WeatherParticlesProps {
   condition: WeatherCondition;
@@ -7,8 +8,11 @@ interface WeatherParticlesProps {
 
 /**
  * Animated weather particles overlay based on current weather condition
+ * Includes night-time stars and moon effects
  */
 export function WeatherParticles({ condition }: WeatherParticlesProps) {
+  const isNight = isNightTime();
+  
   // Generate random particles based on condition
   const particles = useMemo(() => {
     switch (condition) {
@@ -24,14 +28,68 @@ export function WeatherParticles({ condition }: WeatherParticlesProps) {
       case 'windy':
         return generateWindLines(15);
       case 'sunny':
-        return generateSunRays(8);
+        return isNight ? [] : generateSunRays(8);
       default:
         return [];
     }
-  }, [condition]);
+  }, [condition, isNight]);
+
+  // Generate stars for night time
+  const stars = useMemo(() => {
+    return isNight ? generateStars(60) : [];
+  }, [isNight]);
+
+  // Generate shooting stars for clear nights
+  const shootingStars = useMemo(() => {
+    return isNight && (condition === 'sunny' || condition === 'cloudy') ? generateShootingStars(3) : [];
+  }, [isNight, condition]);
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+      {/* Night sky effects */}
+      {isNight && (
+        <>
+          {/* Moon glow */}
+          <div className="moon-container">
+            <div className="moon-glow" />
+            <div className="moon">🌙</div>
+          </div>
+
+          {/* Twinkling stars */}
+          <div className="stars-container">
+            {stars.map((star, i) => (
+              <div
+                key={i}
+                className="star"
+                style={{
+                  left: `${star.x}%`,
+                  top: `${star.y}%`,
+                  animationDelay: `${star.delay}s`,
+                  fontSize: `${star.size}px`,
+                  opacity: star.opacity,
+                }}
+              >
+                ✦
+              </div>
+            ))}
+          </div>
+
+          {/* Shooting stars */}
+          {shootingStars.map((star, i) => (
+            <div
+              key={`shooting-${i}`}
+              className="shooting-star"
+              style={{
+                left: `${star.x}%`,
+                top: `${star.y}%`,
+                animationDelay: `${star.delay}s`,
+                animationDuration: `${star.duration}s`,
+              }}
+            />
+          ))}
+        </>
+      )}
+
       {/* Render particles based on condition */}
       {condition === 'rainy' || condition === 'stormy' ? (
         <div className="rain-container">
@@ -79,7 +137,7 @@ export function WeatherParticles({ condition }: WeatherParticlesProps) {
                 top: `${p.y}%`,
                 animationDelay: `${p.delay}s`,
                 animationDuration: `${p.duration}s`,
-                opacity: p.opacity,
+                opacity: isNight ? p.opacity * 0.5 : p.opacity,
                 transform: `scale(${p.size})`,
               }}
             >
@@ -106,7 +164,7 @@ export function WeatherParticles({ condition }: WeatherParticlesProps) {
         </div>
       ) : null}
 
-      {condition === 'sunny' ? (
+      {condition === 'sunny' && !isNight ? (
         <div className="sun-container">
           <div className="sun-glow" />
           {particles.map((p, i) => (
@@ -166,5 +224,24 @@ function generateSunRays(count: number) {
   return Array.from({ length: count }, (_, i) => ({
     rotation: (360 / count) * i,
     delay: i * 0.1,
+  }));
+}
+
+function generateStars(count: number) {
+  return Array.from({ length: count }, () => ({
+    x: Math.random() * 100,
+    y: Math.random() * 60, // Keep stars in upper portion
+    delay: Math.random() * 3,
+    size: 6 + Math.random() * 12,
+    opacity: 0.4 + Math.random() * 0.6,
+  }));
+}
+
+function generateShootingStars(count: number) {
+  return Array.from({ length: count }, () => ({
+    x: 20 + Math.random() * 60,
+    y: 5 + Math.random() * 30,
+    delay: Math.random() * 8,
+    duration: 1 + Math.random() * 1.5,
   }));
 }
