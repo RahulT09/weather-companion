@@ -47,6 +47,11 @@ serve(async (req) => {
     // Map OpenWeatherMap response to our format
     const weatherCondition = mapWeatherCondition(data.weather[0]?.main);
     
+    // Get timezone offset in seconds and sunrise/sunset times
+    const timezoneOffset = data.timezone || 0; // Offset in seconds from UTC
+    const sunrise = data.sys?.sunrise || 0;
+    const sunset = data.sys?.sunset || 0;
+    
     const weatherData = {
       location: `${data.name}, ${data.sys?.country || ''}`,
       temperature: Math.round(data.main.temp),
@@ -56,6 +61,9 @@ serve(async (req) => {
       rainProbability: calculateRainProbability(data),
       feelsLike: Math.round(data.main.feels_like),
       description: data.weather[0]?.description || weatherCondition,
+      timezoneOffset, // Timezone offset in seconds from UTC
+      sunrise, // Sunrise time (Unix timestamp)
+      sunset, // Sunset time (Unix timestamp)
     };
 
     return new Response(JSON.stringify(weatherData), {

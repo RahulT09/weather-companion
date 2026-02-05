@@ -1,4 +1,4 @@
-import { WeatherCondition } from '@/types/weather';
+import { WeatherCondition, WeatherData } from '@/types/weather';
 
 interface WeatherTheme {
   background: string;
@@ -6,7 +6,37 @@ interface WeatherTheme {
 }
 
 /**
- * Check if it's currently night time (between 7 PM and 6 AM)
+ * Check if it's currently night time at the location
+ * Uses sunrise/sunset times from the API if available,
+ * otherwise falls back to timezone-based calculation
+ */
+export const isNightTimeAtLocation = (weather?: WeatherData | null): boolean => {
+  if (!weather) {
+    // Fallback to user's local time if no weather data
+    const hour = new Date().getHours();
+    return hour >= 19 || hour < 6;
+  }
+
+  // Get current UTC time in seconds
+  const nowUtc = Math.floor(Date.now() / 1000);
+  
+  // If we have sunrise/sunset, use them for accurate day/night
+  if (weather.sunrise && weather.sunset) {
+    return nowUtc < weather.sunrise || nowUtc > weather.sunset;
+  }
+  
+  // Fallback: Calculate local time at location using timezone offset
+  const timezoneOffset = weather.timezoneOffset || 0;
+  const localTimeMs = Date.now() + (timezoneOffset * 1000);
+  const localDate = new Date(localTimeMs);
+  const localHour = localDate.getUTCHours();
+  
+  // Night is between 7 PM (19:00) and 6 AM
+  return localHour >= 19 || localHour < 6;
+};
+
+/**
+ * @deprecated Use isNightTimeAtLocation instead
  */
 export const isNightTime = (): boolean => {
   const hour = new Date().getHours();
@@ -15,10 +45,10 @@ export const isNightTime = (): boolean => {
 
 /**
  * Maps weather conditions to CSS background and text classes
- * Automatically adjusts for day/night time
+ * Automatically adjusts for day/night time at the location
  */
-export const getWeatherTheme = (condition: WeatherCondition): WeatherTheme => {
-  const isNight = isNightTime();
+export const getWeatherTheme = (condition: WeatherCondition, weather?: WeatherData | null): WeatherTheme => {
+  const isNight = isNightTimeAtLocation(weather);
   
   // Night time themes
   if (isNight) {

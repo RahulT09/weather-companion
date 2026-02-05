@@ -9,6 +9,9 @@ export interface WeatherData {
   rainProbability: number;
   feelsLike: number;
   description: string;
+  timezoneOffset?: number; // Timezone offset in seconds from UTC
+  sunrise?: number; // Sunrise time (Unix timestamp)
+  sunset?: number; // Sunset time (Unix timestamp)
 }
 
 export type WeatherCondition = 'sunny' | 'cloudy' | 'rainy' | 'stormy' | 'windy' | 'foggy' | 'snowy';
